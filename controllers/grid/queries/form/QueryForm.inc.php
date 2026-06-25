@@ -426,7 +426,7 @@ class QueryForm extends Form {
 		$query = $this->getQuery();
 
 		$headNote = $query->getHeadNote();
-		$headNote->setTitle($this->getData('subject'));
+		$headNote->setTitle(strip_tags($this->getData('subject')));
 		$headNote->setContents($this->getData('comment'));
 
 		$noteDao = DAORegistry::getDAO('NoteDAO'); /** @var NoteDAO $noteDao */

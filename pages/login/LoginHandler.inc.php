@@ -141,9 +141,14 @@ class LoginHandler extends Handler {
 			Validation::logout();
 		}
 
-		$source = str_replace('@', '', $request->getUserVar('source'));
-		if (isset($source) && !empty($source)) {
-			$request->redirectUrl($request->getProtocol() . '://' . $request->getServerHost() . '/' . $source, false);
+		$source = $request->getUserVar('source');
+		if (!empty($source)) {
+			$source = ltrim($source, '/');
+			if (preg_match('#^[a-zA-Z0-9_./-]+$#', $source)) {
+				$request->redirectUrl($request->getProtocol() . '://' . $request->getServerHost() . '/' . $source);
+			} else {
+				$request->redirect(null, $request->getRequestedPage());
+			}
 		} else {
 			$request->redirect(null, $request->getRequestedPage());
 		}
