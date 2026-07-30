@@ -397,11 +397,15 @@ class PKPString {
 			$config->set('Core.Encoding', Config::getVar('i18n', 'client_charset'));
 			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
 			$config->set('HTML.Allowed', Config::getVar('security', 'allowed_html'));
-			$config->set('HTML.TargetNofollow', true);
 			$config->set('Cache.SerializerPath', 'cache');
 			$purifier = new HTMLPurifier($config);
 		}
-		return $purifier->purify($input);
+		$clean = $purifier->purify($input);
+		$clean = preg_replace_callback('/<a\s([^>]*)>/i', function($m) {
+			if (preg_match('/rel\s*=/i', $m[1])) return $m[0];
+			return '<a ' . $m[1] . ' rel="nofollow">';
+		}, $clean);
+		return $clean;
 	}
 
 	/**
