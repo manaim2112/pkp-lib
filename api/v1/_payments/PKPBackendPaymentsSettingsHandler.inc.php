@@ -77,6 +77,9 @@ class PKPBackendPaymentsSettingsHandler extends APIHandler {
 				case 'currency':
 					$params[$param] = (string) $val;
 					break;
+				case 'paymentPluginName':
+					$params[$param] = is_array($val) ? implode(',', $val) : (string) $val;
+					break;
 			}
 		}
 

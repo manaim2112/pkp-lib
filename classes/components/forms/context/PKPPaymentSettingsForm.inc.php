@@ -55,6 +55,12 @@ class PKPPaymentSettingsForm extends FormComponent {
 			];
 		}
 
+		$selectedPlugins = $context->getData('paymentPluginName');
+		if (!is_array($selectedPlugins)) {
+			$selectedPlugins = !empty($selectedPlugins) ? explode(',', $selectedPlugins) : [];
+		}
+		$selectedPlugins = array_map('trim', $selectedPlugins);
+
 		$this->addGroup([
 				'id' => 'setup',
 				'label' => __('navigation.setup'),
@@ -74,11 +80,11 @@ class PKPPaymentSettingsForm extends FormComponent {
 				'value' => $context->getData('currency'),
 				'groupId' => 'setup',
 			]))
-			->addField(new FieldSelect('paymentPluginName', [
+			->addField(new FieldOptions('paymentPluginName', [
 				'label' => __('plugins.categories.paymethod'),
 				'options' => $pluginList,
 				'showWhen' => 'paymentsEnabled',
-				'value' => $context->getData('paymentPluginName'),
+				'value' => $selectedPlugins,
 				'groupId' => 'setup',
 			]));
 	}
